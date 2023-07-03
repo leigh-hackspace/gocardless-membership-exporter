@@ -1,20 +1,27 @@
-import sys
-import os
-import time
 import logging
-import requests
+import os
+import sys
+import time
 from collections import Counter
+from typing import Dict, Literal, Optional
 from urllib.parse import urljoin
-from typing import Literal, Optional, Dict
-from prometheus_client import Summary, start_http_server
+
+import requests
+from prometheus_client import Info, Summary, start_http_server
 from prometheus_client.core import REGISTRY, GaugeMetricFamily
 from prometheus_client.registry import Collector
+
+from gocardless_membership_exporter import VERSION
+
 from .config import settings
 
 
 class GoCardlessMembershipCollector(Collector):
     scrape_time = Summary(
         "gocardless_scrape_time", "Timings for calls to the GoCardless API"
+    )
+    exporter_version = Info(
+        "gocardless_exporter_version", "Version of the GoCardless exporter"
     )
 
     def __init__(self, environment: Literal["live", "sanbox"], token: str):
@@ -28,6 +35,8 @@ class GoCardlessMembershipCollector(Collector):
             "GoCardless-Version": "2015-07-06",
             "Accept": "application/json",
         }
+
+        self.exporter_version.info({"version": VERSION})
 
     def call_gocardless(
         self, environment: str, endpoint: str, params: Dict = {}

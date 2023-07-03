@@ -29,7 +29,9 @@ class GoCardlessMembershipCollector(Collector):
             "Accept": "application/json",
         }
 
-    def call_gocardless(self, environment: str, endpoint: str, params: Dict = {}) -> Optional[Dict]:
+    def call_gocardless(
+        self, environment: str, endpoint: str, params: Dict = {}
+    ) -> Optional[Dict]:
         if environment == "sandbox":
             base_url = "https://api-sandbox.gocardless.com"
         else:
@@ -58,7 +60,7 @@ class GoCardlessMembershipCollector(Collector):
             labels=["name"],
         )
 
-        # Call GoCardless API
+        # Call Subscriptions endpoint
         resp_data = self.call_gocardless(
             self._environment,
             "/subscriptions",
@@ -69,14 +71,10 @@ class GoCardlessMembershipCollector(Collector):
         )
 
         # Did we get a valid response?
-        if resp_data and 'error' not in resp_data:
-
+        if resp_data and "error" not in resp_data:
             # We don't paginate - but we should in the future, warn about it!
             if resp_data["meta"]["limit"] == (resp_data["subscriptions"]):
                 logging.warning("API call hit the pagnation limit - time to implement!")
-
-            # Total members
-            members.add_metric([], len(resp_data["subscriptions"]))
 
             # Total subscriptions
             subscriptions_total.add_metric([], len(resp_data["subscriptions"]))
@@ -86,6 +84,28 @@ class GoCardlessMembershipCollector(Collector):
                 x["name"] for x in resp_data["subscriptions"]
             ).items():
                 subscriptions.add_metric([key], value)
+
+        # Call the mandates API endpoint, subscriptions don't provide the
+        # customer ref so we call the mandates endpoint to work out the
+        # unique customer IDs, which would represent members.
+        resp_data = self.call_gocardless(
+            self._environment,
+            "/mandates",
+            params={
+                "limit": "500",
+                "status": "active",
+            },
+        )
+
+        # Did we get a valid response?
+        if resp_data and "error" not in resp_data:
+            # Get unique customer IDs
+            members_count = len(
+                set([mandate["links"]["customer"] for mandate in resp_data["mandates"]])
+            )
+
+            # Total members
+            members.add_metric([], members_count)
 
         # Yield out the results to Prometheus Client
         yield members

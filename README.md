@@ -31,3 +31,13 @@ gocardless_subscriptions_total_count 1.0
 # TYPE gocardless_subscriptions_count gauge
 gocardless_subscriptions_count{name="Membership"} 1.0
 ```
+
+## Known Issues
+
+### Pagination
+
+Calls to the GoCardless API doesn't handle pagination at the moment, as its unlikely that Leigh Hackspace will go over 500 active subscriptions, which is the maximum `limit` value to provide to API endpoints.
+
+### Rate Limits
+
+This exporter doesn't handle rate limits yet, as the default GoCardless rate limits are 1000rq/minute, something we'll never hit at Leigh Hackspace.

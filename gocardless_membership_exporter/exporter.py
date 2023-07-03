@@ -3,13 +3,12 @@ import os
 import sys
 import time
 from collections import Counter
-from typing import Dict, Literal, Optional
-from urllib.parse import urljoin
+from typing import Literal
 
-import requests
 from prometheus_client import Info, Summary, start_http_server
 from prometheus_client.core import REGISTRY, GaugeMetricFamily
 from prometheus_client.registry import Collector
+import gocardless_pro
 
 from gocardless_membership_exporter import VERSION
 
@@ -28,31 +27,7 @@ class GoCardlessMembershipCollector(Collector):
         self._token = token
         self._environment = environment
 
-        # Prep the session
-        self.session = requests.session()
-        self.session.headers = {
-            "Authorization": "Bearer {0}".format(self._token),
-            "GoCardless-Version": "2015-07-06",
-            "Accept": "application/json",
-        }
-
         self.exporter_version.info({"version": VERSION})
-
-    def call_gocardless(
-        self, environment: str, endpoint: str, params: Dict = {}
-    ) -> Optional[Dict]:
-        if environment == "sandbox":
-            base_url = "https://api-sandbox.gocardless.com"
-        else:
-            base_url = "https://api.gocardless.com"
-
-        resp = self.session.get(
-            urljoin(base_url, endpoint),
-            params=params,
-        )
-
-        if resp.ok:
-            return resp.json()
 
     @scrape_time.time()
     def collect(self):
@@ -69,52 +44,42 @@ class GoCardlessMembershipCollector(Collector):
             labels=["name"],
         )
 
-        # Call Subscriptions endpoint
-        resp_data = self.call_gocardless(
-            self._environment,
-            "/subscriptions",
-            params={
-                "limit": "500",
-                "status": "active",
-            },
+        # Init the GoCardless client
+        client = gocardless_pro.Client(
+            access_token=self._token, environment=self._environment
         )
 
-        # Did we get a valid response?
-        if resp_data and "error" not in resp_data:
-            # We don't paginate - but we should in the future, warn about it!
-            if resp_data["meta"]["limit"] == (resp_data["subscriptions"]):
-                logging.warning("API call hit the pagnation limit - time to implement!")
+        subscription_data = list(
+            client.subscriptions.all(
+                {
+                    "limit": "500",
+                    "status": "active",
+                }
+            )
+        )
 
-            # Total subscriptions
-            subscriptions_total.add_metric([], len(resp_data["subscriptions"]))
+        # Total subscriptions
+        subscriptions_total.add_metric([], len(subscription_data))
 
-            # Per subscription totals
-            for key, value in Counter(
-                x["name"] for x in resp_data["subscriptions"]
-            ).items():
-                subscriptions.add_metric([key], value)
+        # Per subscription totals
+        for key, value in Counter(x.name for x in subscription_data).items():
+            subscriptions.add_metric([key], value)
 
         # Call the mandates API endpoint, subscriptions don't provide the
         # customer ref so we call the mandates endpoint to work out the
         # unique customer IDs, which would represent members.
-        resp_data = self.call_gocardless(
-            self._environment,
-            "/mandates",
-            params={
+        mandates_data = client.mandates.all(
+            {
                 "limit": "500",
                 "status": "active",
-            },
+            }
         )
 
-        # Did we get a valid response?
-        if resp_data and "error" not in resp_data:
-            # Get unique customer IDs
-            members_count = len(
-                set([mandate["links"]["customer"] for mandate in resp_data["mandates"]])
-            )
+        # Get unique customer IDs
+        members_count = len(set([mandate.links.customer for mandate in mandates_data]))
 
-            # Total members
-            members.add_metric([], members_count)
+        # Total members
+        members.add_metric([], members_count)
 
         # Yield out the results to Prometheus Client
         yield members

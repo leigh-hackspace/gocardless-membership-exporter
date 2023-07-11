@@ -65,6 +65,9 @@ class GoCardlessMembershipCollector(Collector):
         for key, value in Counter(x.name for x in subscription_data).items():
             subscriptions.add_metric([key], value)
 
+        # Create a list of associated mandate IDs for the subscriptions
+        mandates_ids = [x.links.mandate for x in subscription_data]
+
         # Call the mandates API endpoint, subscriptions don't provide the
         # customer ref so we call the mandates endpoint to work out the
         # unique customer IDs, which would represent members.
@@ -76,7 +79,7 @@ class GoCardlessMembershipCollector(Collector):
         )
 
         # Get unique customer IDs
-        members_count = len(set([mandate.links.customer for mandate in mandates_data]))
+        members_count = len(set([mandate.links.customer for mandate in mandates_data if mandate.id in mandates_ids]))
 
         # Total members
         members.add_metric([], members_count)

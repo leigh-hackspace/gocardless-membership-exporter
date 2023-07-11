@@ -1,5 +1,6 @@
 import logging
 import os
+import signal
 import sys
 import time
 from collections import Counter
@@ -97,6 +98,11 @@ def main():
         settings.gocardless_environment, settings.gocardless_token
     )
     REGISTRY.register(collector)
+ 
+    def signal_term_handler(signal, frame):
+        sys.exit(0)
+    
+    signal.signal(signal.SIGTERM, signal_term_handler)
 
     start_http_server(5002)
 

@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "gocardless-member-exporter"
+version = "0.0.1"
+description = ""
+authors = ["Andrew Williams <andy@tensixtyone.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "gocardless_membership_exporter"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic-settings = "^2.0.3"
+prometheus_client = "^0.18.0"
+gocardless_pro = "^1.48.0"
+
+[tool.poetry.group.test.dependencies]
+ruff = "^0.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+ignore = ["E501"]

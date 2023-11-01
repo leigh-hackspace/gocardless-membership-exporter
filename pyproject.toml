@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gocardless-member-exporter"
-version = "0.0.1"
+version = "0.0.2"
 description = ""
 authors = ["Andrew Williams <andy@tensixtyone.com>"]
 license = "MIT"

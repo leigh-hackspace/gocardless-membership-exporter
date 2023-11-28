@@ -126,14 +126,14 @@ files = [
 
 [[package]]
 name = "gocardless-pro"
-version = "1.48.0"
+version = "1.49.0"
 description = "A client library for the GoCardless Pro API."
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "gocardless_pro-1.48.0-py3-none-any.whl", hash = "sha256:75a577c9b60e41e9ee45f5f999ae56444ffe66a2d9cb44dd096a9f09c0692e20"},
-    {file = "gocardless_pro-1.48.0.tar.gz", hash = "sha256:c830997ffc72c69c830c8a4b25cc1a236b73fe69517ca1abd74eabe8730d9b92"},
+    {file = "gocardless_pro-1.49.0-py3-none-any.whl", hash = "sha256:5e91d2fe3d658d07be8afd2068b402f3d39cd4a1ec48b629eadb105e2f049c50"},
+    {file = "gocardless_pro-1.49.0.tar.gz", hash = "sha256:ea0096b5ec57aec013a4496abb2bd677e3c23e22353a30f8657ecec606d87746"},
 ]
 
 [package.dependencies]

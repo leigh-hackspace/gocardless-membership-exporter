@@ -14,7 +14,7 @@ prometheus_client = "^0.20.0"
 gocardless_pro = "^1.48.0"
 
 [tool.poetry.group.test.dependencies]
-ruff = "^0.2.0"
+ruff = "^0.3.0"
 
 [build-system]
 requires = ["poetry-core"]

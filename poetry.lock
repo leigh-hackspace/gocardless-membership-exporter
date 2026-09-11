@@ -149,19 +149,18 @@ files = [
 
 [[package]]
 name = "gocardless-pro"
-version = "1.49.0"
-description = "A client library for the GoCardless Pro API."
+version = "3.8.0"
+description = "A client library for the GoCardless API."
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
 files = [
-    {file = "gocardless_pro-1.49.0-py3-none-any.whl", hash = "sha256:5e91d2fe3d658d07be8afd2068b402f3d39cd4a1ec48b629eadb105e2f049c50"},
-    {file = "gocardless_pro-1.49.0.tar.gz", hash = "sha256:ea0096b5ec57aec013a4496abb2bd677e3c23e22353a30f8657ecec606d87746"},
+    {file = "gocardless_pro-3.8.0-py3-none-any.whl", hash = "sha256:076014eee9f06975179555867a3a4adef3b9019015b08d1534396fd10345c9e9"},
+    {file = "gocardless_pro-3.8.0.tar.gz", hash = "sha256:1a8bb23eda689f61e23311fbb3fad33c19ebe7c48f4423795b3e232dbbf7e25e"},
 ]
 
 [package.dependencies]
-requests = ">=2.6"
-six = "*"
+requests = ">=2.34.2"
 
 [[package]]
 name = "idna"
@@ -390,25 +389,25 @@ cli = ["click (>=5.0)"]
 
 [[package]]
 name = "requests"
-version = "2.32.5"
+version = "2.34.2"
 description = "Python HTTP for Humans."
 category = "main"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 files = [
-    {file = "requests-2.32.5-py3-none-any.whl", hash = "sha256:2462f94637a34fd532264295e186976db0f5d453d1cdd31473c85a6a161affb6"},
-    {file = "requests-2.32.5.tar.gz", hash = "sha256:dbba0bac56e100853db0ea71b82b4dfd5fe2bf6d3754a8893c3af500cec7d7cf"},
+    {file = "requests-2.34.2-py3-none-any.whl", hash = "sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0"},
+    {file = "requests-2.34.2.tar.gz", hash = "sha256:f288924cae4e29463698d6d60bc6a4da69c89185ad1e0bcc4104f584e960b9ed"},
 ]
 
 [package.dependencies]
-certifi = ">=2017.4.17"
+certifi = ">=2023.5.7"
 charset_normalizer = ">=2,<4"
 idna = ">=2.5,<4"
-urllib3 = ">=1.21.1,<3"
+urllib3 = ">=1.26,<3"
 
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)"]
-use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
+use-chardet-on-py3 = ["chardet (>=3.0.2,<8)"]
 
 [[package]]
 name = "ruff"
@@ -435,18 +434,6 @@ files = [
     {file = "ruff-0.4.10-py3-none-win_amd64.whl", hash = "sha256:67f67cef43c55ffc8cc59e8e0b97e9e60b4837c8f21e8ab5ffd5d66e196e25f7"},
     {file = "ruff-0.4.10-py3-none-win_arm64.whl", hash = "sha256:dd1fcee327c20addac7916ca4e2653fbbf2e8388d8a6477ce5b4e986b68ae6c0"},
     {file = "ruff-0.4.10.tar.gz", hash = "sha256:3aa4f2bc388a30d346c56524f7cacca85945ba124945fe489952aadb6b5cd804"},
-]
-
-[[package]]
-name = "six"
-version = "1.17.0"
-description = "Python 2 and 3 compatibility utilities"
-category = "main"
-optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
-files = [
-    {file = "six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274"},
-    {file = "six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81"},
 ]
 
 [[package]]
@@ -497,4 +484,4 @@ zstd = ["backports-zstd (>=1.0.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "972aae802dac3e68f91b65b51c1465207e8dd70ed9d31dbfb9939a2eeab0151c"
+content-hash = "945c995402854ac90b2574ddabaede918373d6b03c0704a9a36bd84b2c062377"
